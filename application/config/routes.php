@@ -23,7 +23,7 @@
 | RESERVED ROUTES
 | -------------------------------------------------------------------------
 |
-| There area two reserved routes:
+| The;e area two reserved routes:
 |
 |	$route['default_controller'] = 'welcome';
 |

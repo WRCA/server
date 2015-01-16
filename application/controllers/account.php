@@ -1,8 +1,5 @@
 <?php
 class Account extends CI_Controller{
-    public function index() {
-        echo "hello world!";
-    }
 
     public function verificationCode() {
 
@@ -23,7 +20,7 @@ class Account extends CI_Controller{
             return;
         }
 
-        // get its verification code
+         // get its verification code
         $row = $this->Resident_model->get_row_by_email($email);
 
         // send email
@@ -34,11 +31,119 @@ class Account extends CI_Controller{
     }
 
     public function register() {
+
+        // check parameters
+        if (!isset($_GET['email']) || !isset($_GET['password']) || !isset($_GET['verificationCode'])) {
+            $response = array('status' => 400, 'message' => 'parameters missing'); 
+            echo json_encode($response);
+            return;
+        }
+
+        $email = $_GET['email'];
+        $verificationCode = $_GET['verificationCode'];
+
+        // find this email exist?
+        $this->load->model('Resident_model', '', TRUE);
+        $result = $this->Resident_model->contains_email($_GET['email']);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'cannot find this email');
+            echo json_encode($response);
+            return;
+        }
+
+        // check verification match
+        $row = $this->Resident_model->get_row_by_email($email);
+        if ($row->verification_code != $verificationCode) {
+            $response = array('status' => 400, 'message' => 'verification code not match');
+            echo json_encode($response);
+            return;
+        }
+
+        // insert into user table
+        $this->load->model('User_model', '', TRUE);
+        $result = $this->User_model->contains_email($email);
+        if ($result) {
+            $response = array('status' => 400, 'message' => 'account already registered');
+            echo json_encode($response);
+           return;
+        }
+        
+        $authToken =  bin2hex(openssl_random_pseudo_bytes(16));
+        $result = $this->User_model->insert_row($email, $password, $authToken);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'verification code not match');
+            echo json_encode($response);
+            return;
+        }
+
+        $response = array('status' => 200, 'message' => 'register ok.');
+        echo json_encode($response);
     } 
     public function login() {
+        // check parameters
+        if (!isset($_GET['email']) || !isset($_GET['password']) ) {
+            $response = array('status' => 400, 'message' => 'parameters missing'); 
+            echo json_encode($response);
+            return;
+        }
+
+        $email = $_GET['email'];
+        $password = $_GET['password'];
+
+        // user exist?
+        $this->load->model('User_model', '', TRUE);
+        $result = $this->User_model->contains_email($email);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'user not exist');
+            echo json_encode($response);
+            return;
+        }
+        
+        // match password?
+        $row = $this->User_model->get_row_by_email($email);
+        if ($row->password != $password) {
+            $response = array('status' => 400, 'message' => 'password not match');
+            echo json_encode($response);
+            return;
+        }
+
+        // update authToken
+        $authToken = bin2hex(openssl_random_pseudo_bytes(16));
+        $result = $this->User_model->update_row($email, $password, $authToken);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'update database error');
+            echo json_encode($response);
+            return;
+        }
+
+        $response = array('status' => 200, 'message' => 'login ok', 'authToken' => "$authToken");
+        echo json_encode($response);
     }
 
     public function password() {
+        // check parameters
+        if (!isset($_GET['email']) ) {
+            $response = array('status' => 400, 'message' => 'parameters missing'); 
+            echo json_encode($response);
+            return;
+        }
+
+        $email = $_GET['email'];
+        // check email exist
+        $this->load->model('User_model', '', TRUE);
+        $result = $this->User_model->contains_email($email);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'user not exist');
+            echo json_encode($response);
+            return;
+        }
+
+        // send email to user mail box
+        $row = $this->User_model->get_row_by_email($email);
+        $message = "Hi Dear WRCA member,<br /><br /> This is your WRCA app password#". $row->password . "<br /><br /> WRCA App development group";
+        $this->send_email($email, $message);
+        $response = array('status' => 200, 'message' => 'please check your email box');
+        echo json_encode($response);
     }
 
     private function send_email($email, $message) {
@@ -62,5 +167,6 @@ class Account extends CI_Controller{
 
         $this->email->send();
     }
+
 }
 ?>
