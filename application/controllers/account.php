@@ -7,13 +7,13 @@ class Account extends CI_Controller{
     public function verificationCode() {
 
         // check parameters
-        $email = $_GET['email'];
-        if (empty($email)) {
+        if (!isset($_GET['email'])) {
             $response = array('status' => 400, 'message' => 'parameters missing'); 
             echo json_encode($response);
             return;
         }
 
+        $email = $_GET['email'];
         // find this email exist?
         $this->load->model('Resident_model', '', TRUE);
         $result = $this->Resident_model->contains_email($_GET['email']);
