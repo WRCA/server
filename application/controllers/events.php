@@ -24,14 +24,14 @@ class Events extends CI_Controller {
         $start = $offset;
         $end = $offset + $limit - 1;
 
-        //// verify authToken
-        //$this->load->model('User_model', '', TRUE);
-        //$result = $this->User_model->contains_authorization_token($authToken);
-        //if (!$result) {
-            //$response = array('status' => 400, 'message' => 'token invalid'); 
-            //echo json_encode($response);
-            //return;
-        //}
+        // verify authToken
+        $this->load->model('User_model', '', TRUE);
+        $result = $this->User_model->contains_authorization_token($authToken);
+        if (!$result) {
+            $response = array('status' => 400, 'message' => 'token invalid'); 
+            echo json_encode($response);
+            return;
+        }
 
         // fetch events and response
         switch ($range) {
