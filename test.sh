@@ -11,3 +11,6 @@
 
 # test "password"
 #curl "http://localhost/v1/account/password?email=hejc09@gmail.com" 
+
+# test "events"
+curl "http://localhost/v1/events?authToken=&range=all&offset=1&limit=5"

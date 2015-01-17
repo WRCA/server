@@ -36,5 +36,14 @@ class User_model extends CI_Model {
         }
         return true;
     }
+
+    public function contains_authorization_token($authToken) {
+        $query = $this->db->query("SELECT * FROM user WHERE token='$authToken'");
+        $num = $query->num_rows();
+        if ($num == 0) {
+            return false;
+        }
+        return true;
+    }
 }
 ?>
