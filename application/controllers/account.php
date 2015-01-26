@@ -46,7 +46,7 @@ class Account extends CI_Controller{
 
         // find this email exist?
         $this->load->model('Resident_model', '', TRUE);
-        $result = $this->Resident_model->contains_email($_GET['email']);
+        $result = $this->Resident_model->contains_email($email);
         if (!$result) {
             $response = array('status' => 400, 'message' => 'cannot find this email');
             echo json_encode($response);
