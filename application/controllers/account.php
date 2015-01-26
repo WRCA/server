@@ -30,18 +30,19 @@ class Account extends CI_Controller{
         echo json_encode($response);
     }
 
+    // post request
     public function register() {
 
         // check parameters
-        if (!isset($_GET['email']) || !isset($_GET['password']) || !isset($_GET['verificationCode'])) {
+        if (!isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['verificationCode'])) {
             $response = array('status' => 400, 'message' => 'parameters missing'); 
             echo json_encode($response);
             return;
         }
 
-        $email = $_GET['email'];
-        $verificationCode = $_GET['verificationCode'];
-        $password = $_GET['password'];
+        $email = $_POST['email'];
+        $verificationCode = $_POST['verificationCode'];
+        $password = $_POST['password'];
 
         // find this email exist?
         $this->load->model('Resident_model', '', TRUE);
