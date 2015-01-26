@@ -40,11 +40,10 @@ class Events extends CI_Controller {
                 $rows = $this->Event_model->get_rows_by_id_range($start, $end);
 
                 // total number
-                $num = $this->Event_model->size();
-                $nextOffset = $num > $end ? $end+1 : -1;
+                $listCount = $this->Event_model->size();
                 
                 if ($rows) {
-                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'nextOffset' => $nextOffset);
+                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'list_count' => $listCount);
                 } else {
                     $response = array('status' => 400, 'message' => 'server has no more data');
                 }
@@ -54,10 +53,9 @@ class Events extends CI_Controller {
                 $this->load->model('Event_model', '', TRUE);
                 $date = $this->get_date_range_of_this_week(); 
                 $rows = $this->Event_model->get_rows_by_date_range($date['start'], $date['end'], $start, $end);
-                $num = $this->Event_model->size_by_date_range($date['start'], $date['end']);
-                $nextOffset = $num > $end ? $end+1 : -1;
+                $list_count = $this->Event_model->size_by_date_range($date['start'], $date['end']);
                 if ($rows) {
-                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'nextOffset' => $nextOffset);
+                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'list_count' => $list_count);
                 } else {
                     $response = array('status' => 400, 'message' => 'server has no more data');
                 }
@@ -67,10 +65,10 @@ class Events extends CI_Controller {
                 $this->load->model('Event_model', '', TRUE);
                 $date = $this->get_date_range_of_this_month(); 
                 $rows = $this->Event_model->get_rows_by_date_range($date['start'], $date['end'], $start, $end);
-                $num = $this->Event_model->size_by_date_range($date['start'], $date['end']);
-                $nextOffset = $num > $end ? $end+1 : -1;
+                $list_count = $this->Event_model->size_by_date_range($date['start'], $date['end']);
+
                 if ($rows) {
-                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'nextOffset' => $nextOffset);
+                    $response = array('status' => 200, 'message' => 'ok', 'events' => $rows, 'list_count' => $list_count);
                 } else {
                     $response = array('status' => 400, 'message' => 'server has no more data');
                 }
