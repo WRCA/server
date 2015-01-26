@@ -41,6 +41,7 @@ class Account extends CI_Controller{
 
         $email = $_GET['email'];
         $verificationCode = $_GET['verificationCode'];
+        $password = $_GET['password'];
 
         // find this email exist?
         $this->load->model('Resident_model', '', TRUE);
@@ -81,14 +82,14 @@ class Account extends CI_Controller{
     } 
     public function login() {
         // check parameters
-        if (!isset($_GET['email']) || !isset($_GET['password']) ) {
+        if (!isset($_POST['email']) || !isset($_POST['password']) ) {
             $response = array('status' => 400, 'message' => 'parameters missing'); 
             echo json_encode($response);
             return;
         }
 
-        $email = $_GET['email'];
-        $password = $_GET['password'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
         // user exist?
         $this->load->model('User_model', '', TRUE);
