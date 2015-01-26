@@ -44,6 +44,12 @@ class Account extends CI_Controller{
         $verificationCode = $_POST['verificationCode'];
         $password = $_POST['password'];
 
+        if (empty($email) || empty($verificationCode) || empty($password)) {
+            $response = array('status' => 400, 'message' => 'parameters value cannot be empty'); 
+            echo json_encode($response);
+            return;
+        }
+
         // find this email exist?
         $this->load->model('Resident_model', '', TRUE);
         $result = $this->Resident_model->contains_email($email);
