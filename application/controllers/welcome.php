@@ -19,7 +19,14 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+
+        $this->load->model('Gcm_model', '', TRUE);
+
+        $rows = $this->Gcm_model->get_rows_all();
+        $data['rows'] = $rows;
+        $data['no_of_users'] = $this->Gcm_model->size();
+		$this->load->view('welcome_message', $data);
+
 	}
 }
 

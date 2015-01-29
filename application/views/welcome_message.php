@@ -1,88 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
 
-	<style type="text/css">
+    });
+    function sendPushNotification(id){
+        var data = $('form#'+id).serialize();
+        $('form#'+id).unbind('submit');                
+        $.ajax({
+        url: "send_message.php",
+            type: 'GET',
+            data: data,
+            beforeSend: function() {
 
-	::selection{ background-color: #E13300; color: white; }
-	::moz-selection{ background-color: #E13300; color: white; }
-	::webkit-selection{ background-color: #E13300; color: white; }
+            },
+            success: function(data, textStatus, xhr) {
+                $('.txt_message').val("");
+            },
+            error: function(xhr, textStatus, errorThrown) {
 
-	body {
-		background-color: #fff;
-		margin: 40px;
-		font: 13px/20px normal Helvetica, Arial, sans-serif;
-		color: #4F5155;
-	}
+            }
+        });
+        return false;
+    }
+    </script>
+                                    <style type="text/css">
+                                                .container{
+                                                                    width: 950px;
+                                                                                    margin: 0 auto;
+                                                                                    padding: 0;
+                                                                                                }
+                h1{
+                                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                                                    font-size: 24px;
+                                                    color: #777;
+                                                                }
+                div.clear{
+                                    clear: both;
+                                                }
+                ul.devices{
+                                    margin: 0;
+                                                    padding: 0;
+                                                }
+                ul.devices li{
+                                    float: left;
+                                                    list-style: none;
+                                                    border: 1px solid #dedede;
+                                                                    padding: 10px;
+                                                                    margin: 0 15px 25px 0;
+                                                                                    border-radius: 3px;
+                                                                                    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+                                                                                                    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+                                                                                                    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+                                                                                                                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                                                                                                                    color: #555;
+                                                                                                                                }
+                ul.devices li label, ul.devices li span{
+                                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                                                    font-size: 12px;
+                                                    font-style: normal;
+                                                                    font-variant: normal;
+                                                                    font-weight: bold;
+                                                                                    color: #393939;
+                                                                                    display: block;
+                                                                                                    float: left;
+                                                                                                }
+                ul.devices li label{
+                                    height: 25px;
+                                                    width: 50px;                
+                                                }
+                ul.devices li textarea{
+                                    float: left;
+                                                    resize: none;
+                                                }
+                ul.devices li .send_btn{
+                                    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0096FF), to(#005DFF));
+                                                    background: -webkit-linear-gradient(0% 0%, 0% 100%, from(#0096FF), to(#005DFF));
+                                                    background: -moz-linear-gradient(center top, #0096FF, #005DFF);
+                                                                    background: linear-gradient(#0096FF, #005DFF);
+                                                                    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+                                                                                    border-radius: 3px;
+                                                                                    color: #fff;
+                                                                                                }
+            </style>
+                    </head>
+                        <body>
+                        <div class="container">
+                                        <h1>No of Devices Registered: <?php echo $no_of_users; ?></h1>
+                                                    <hr/>
+                                                                <ul class="devices">
+<?php
+if ($no_of_users > 0) {
+?>
+<?php
+    foreach ($rows as $row) {
+?>
+                                                                                    <li>
+                                                                                                                    <form id="<?php echo $row["id"] ?>" name="" method="post" onsubmit="return sendPushNotification('<?php echo $row["id"] ?>')">
+                                                                                                                                                    <label>Name: </label> <span><?php echo $row["name"] ?></span>
+                                                                                                                                                                                    <div class="clear"></div>
+                                                                                                                                                                                                                    <label>Email:</label> <span><?php echo $row["email"] ?></span>
+                                                                                                                                                                                                                                                    <div class="clear"></div>
+                                                                                                                                                                                                                                                                                    <div class="send_container">                                
+                                                                                                                                                                                                                                                                                                                        <textarea rows="3" name="message" cols="25" class="txt_message" placeholder="Type message here"></textarea>
+                                                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="regId" value="<?php echo $row["gcm_regid"] ?>"/>
+                                                                                                                                                                                                                                                                                                                                                                                                <input type="submit" class="send_btn" value="Send" onclick=""/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            </form>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </li>
+<?php }
+} else { ?> 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    No Users Registered Yet!
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <?php } ?>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </html>
 
-	a {
-		color: #003399;
-		background-color: transparent;
-		font-weight: normal;
-	}
-
-	h1 {
-		color: #444;
-		background-color: transparent;
-		border-bottom: 1px solid #D0D0D0;
-		font-size: 19px;
-		font-weight: normal;
-		margin: 0 0 14px 0;
-		padding: 14px 15px 10px 15px;
-	}
-
-	code {
-		font-family: Consolas, Monaco, Courier New, Courier, monospace;
-		font-size: 12px;
-		background-color: #f9f9f9;
-		border: 1px solid #D0D0D0;
-		color: #002166;
-		display: block;
-		margin: 14px 0 14px 0;
-		padding: 12px 10px 12px 10px;
-	}
-
-	#body{
-		margin: 0 15px 0 15px;
-	}
-	
-	p.footer{
-		text-align: right;
-		font-size: 11px;
-		border-top: 1px solid #D0D0D0;
-		line-height: 32px;
-		padding: 0 10px 0 10px;
-		margin: 20px 0 0 0;
-	}
-	
-	#container{
-		margin: 10px;
-		border: 1px solid #D0D0D0;
-		-webkit-box-shadow: 0 0 8px #D0D0D0;
-	}
-	</style>
-</head>
-<body>
-
-<div id="container">
-	<h1>Welcome to CodeIgniter!</h1>
-
-	<div id="body">
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
-
-		<p>If you would like to edit this page you'll find it located at:</p>
-		<code>application/views/welcome_message.php</code>
-
-		<p>The corresponding controller for this page is found at:</p>
-		<code>application/controllers/welcome.php</code>
-
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
-	</div>
-
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
-</div>
-
-</body>
-</html>

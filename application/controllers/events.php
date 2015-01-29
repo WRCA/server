@@ -21,7 +21,7 @@ class Events extends CI_Controller {
         $offset = $_GET['offset'];
         $limit = $_GET['limit'];
 
-        if (empty($authToken) || empty($range) || empty($offset) || empty(limit) ) {
+        if (empty($authToken) || empty($range) || empty($offset) || empty($limit) ) {
             $response = array('status' => 400, 'message' => 'parameters value cannot be empty');
             echo json_encode($response);
             return;

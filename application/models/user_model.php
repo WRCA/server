@@ -12,7 +12,6 @@ class User_model extends CI_Model {
             return false;
         }
         return true;
-
     } 
     public function update_row($email, $password, $token) {
         $query = $this->db->query("UPDATE user set password='$password', token='$token' WHERE email='$email'");
