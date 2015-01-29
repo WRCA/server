@@ -11,7 +11,7 @@ class Gcm extends CI_Controller {
 
             $this->load->model('Gcm_model', '', TRUE);
 
-            if (!$this->Gcm_model->contains_email($email)) { 
+            if (!$this->Gcm_model->contains_register_id($gcm_regid)) { 
                 // prevent repeat insert
                 $result = $this->Gcm_model->insert_row($name, $email, $gcm_regid);
             }
@@ -36,7 +36,15 @@ class Gcm extends CI_Controller {
     }
 
     public function unregister() {
-        // placeholder method
+        if (isset($_POST["regId"])) {
+            $gcm_regid = $_POST["regId"]; // GCM Registration ID
+
+            $this->load->model('Gcm_model', '', TRUE);
+            if ($this->Gcm_model->contains_register_id($gcm_regid)) { 
+                // make sure we have this record
+                $this->Gcm_model->delete_row($gcm_regid);
+            }
+        }
     }
 
     private function send_notification($registatoin_ids, $message) {
