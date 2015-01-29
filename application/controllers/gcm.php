@@ -20,10 +20,22 @@ class Gcm extends CI_Controller {
         }
     }
 
+
+    public function push() {
+        if (isset($_GET["regId"]) && isset($_GET["message"])) {
+            $regId = $_GET["regId"];
+            $message = $_GET["message"];
+
+            $registatoin_ids = array($regId);
+            $message = array("content" => $message, "time" => "now");
+            $result = $this->send_notification($registatoin_ids, $message);
+            echo $result;
+        }
+    }
+
     public function unregister() {
         // placeholder method
     }
-
 
     private function send_notification($registatoin_ids, $message) {
 
@@ -64,5 +76,6 @@ class Gcm extends CI_Controller {
         curl_close($ch);
         echo $result;
     }
+
 }
 ?>

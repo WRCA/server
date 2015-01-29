@@ -12,7 +12,7 @@
         var data = $('form#'+id).serialize();
         $('form#'+id).unbind('submit');                
         $.ajax({
-        url: "send_message.php",
+        url: "gcm/push",
             type: 'GET',
             data: data,
             beforeSend: function() {
@@ -20,9 +20,10 @@
             },
             success: function(data, textStatus, xhr) {
                 $('.txt_message').val("");
+                console.log("success");
             },
             error: function(xhr, textStatus, errorThrown) {
-
+                console.log("fail");
             }
         });
         return false;
