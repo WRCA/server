@@ -28,5 +28,14 @@ class Gcm_model extends CI_Model {
         }
         return true;
     } 
+
+    public function contains_email($email) {
+        $query = $this->db->query("SELECT * FROM gcm WHERE email='$email'");
+        $num = $query->num_rows();
+        if ($num == 0) {
+            return false;
+        }
+        return true;
+    }
 }
 ?>

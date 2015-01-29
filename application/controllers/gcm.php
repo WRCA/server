@@ -9,13 +9,15 @@ class Gcm extends CI_Controller {
             $email = $_POST["email"];
             $gcm_regid = $_POST["regId"]; // GCM Registration ID
 
-
             $this->load->model('Gcm_model', '', TRUE);
-            $result = $this->Gcm_model->insert_row($name, $email, $gcm_regid);
+
+            if (!$this->Gcm_model->contains_email($email)) { 
+                // prevent repeat insert
+                $result = $this->Gcm_model->insert_row($name, $email, $gcm_regid);
+            }
 
             $registatoin_ids = array($gcm_regid);
             $message = array("I" => "like it.");
-
             $result = $this->send_notification($registatoin_ids, $message);
         }
     }
