@@ -76,7 +76,11 @@ class Account extends CI_Controller{
            return;
         }
         
-        $authToken =  bin2hex(openssl_random_pseudo_bytes(16));
+        /*
+         * note: since this is just a demo app
+         * we do not introduce security mechanism, e.g., oauth.
+         */
+        $authToken = bin2hex(openssl_random_pseudo_bytes(16));
         $result = $this->User_model->insert_row($email, $password, $authToken);
         if (!$result) {
             $response = array('status' => 400, 'message' => 'verification code not match');
@@ -84,7 +88,10 @@ class Account extends CI_Controller{
             return;
         }
 
-        $response = array('status' => 200, 'message' => 'register ok.');
+        $response = array('status' => 200, 
+            'message' => 'register ok.',
+            'authToken' => $authToken);
+
         echo json_encode($response);
     } 
     public function login() {
